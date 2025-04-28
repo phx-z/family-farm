@@ -51,7 +51,7 @@ import java.util.List;
  */
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc //自动配置 Spring MVC 测试环境‌,不可以单独使用，必须与 @SpringBootTest 组合使用‌
 public class UserControllerTest {
 
     @Autowired

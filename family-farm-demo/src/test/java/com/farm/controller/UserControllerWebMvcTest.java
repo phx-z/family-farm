@@ -2,7 +2,7 @@ package com.farm.controller;
 
 
 import com.farm.entity.User;
-import com.farm.service.impl.UserServiceImpl;
+import com.farm.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +23,10 @@ import java.util.List;
  * @Description 快速验证 Controller 层的 HTTP 请求处理逻辑与响应格式,显式模拟 Service 层依赖
  *
  * <p>
- * Mock对象与Spy对象、thenReturn与doReturn的选择如下：
+ * MockBean对象与SpyBean对象、thenReturn与doReturn的选择如下：
  * <p>
- * Mock对象与Spy对象选择：@Mock对象：
- * 因测试只测试Controller层,不需要执行真实方法，所以使用@Mock对象，
+ * MockBean对象与SpyBean对象选择：@MockBean对象：
+ * 因只测试Controller层的HTTP请求处理逻辑与响应格式,不需要执行真实方法，所以使用@MockBean对象全部模拟userService，
  * thenReturn与doReturn选择：thenReturn：
  * 在使用@Mock对象时，thenReturn与doReturn等效，使用thenReturn代码更简洁，所以使用thenReturn
  * <p>
@@ -54,15 +54,16 @@ public class UserControllerWebMvcTest {
     @Autowired
     private MockMvc mockMvc;
 
+//    @SpyBean UserService 异常，@SpyBean UserServiceImpl正常
     @MockBean  // 显式模拟 Service 层依赖
-    private UserServiceImpl userService;
+    private UserService userService;
 
     /**
      * 测试controller中getUser方法
      * 模拟userService.getUser方法的返回值，
      * Body = {"id":3,"name":"模拟Service的返回数据"}
      * <p>
-     *
+     * <p>
      * 对于Mock对象，thenReturn与doReturn方法的等效，不会执行真实方法，when子句不会执行
      * debug时，任何断点都不走
      *
@@ -71,8 +72,8 @@ public class UserControllerWebMvcTest {
     @Test
     public void getUserTest() throws Exception {
         // 模拟 Service 返回有效数据
-        Mockito.when(userService.getUser()).thenReturn(new User(3, "模拟Service的返回数据"));
-//        Mockito.doReturn(new User(3, "模拟Service的返回数据")).when(userService).getUser();
+//        Mockito.when(userService.getUser()).thenReturn(new User(3, "模拟Service的返回数据"));
+        Mockito.doReturn(new User(3, "模拟Service的返回数据")).when(userService).getUser();
         // 发送请求并打印响应
         mockMvc.perform(MockMvcRequestBuilders
                         //构造请求
@@ -85,6 +86,10 @@ public class UserControllerWebMvcTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("模拟Service的返回数据"))  // 验证中文字段值:ml-citation{ref="4,7" data="citationList"}
                 //添加一个结果处理器，此处打印整个响应结果信息
                 .andDo(MockMvcResultHandlers.print());
+
+
+        // 验证真实方法是否被调用1次
+        Mockito.verify(userService).getUser();
 
     }
 
