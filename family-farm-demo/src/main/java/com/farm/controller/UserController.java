@@ -32,8 +32,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/user")
 
+    @GetMapping("/user")
     @Operation(summary = "查询用户信息", description = "这里固定获取第一个用户，无需参数", responses = {
             @ApiResponse(responseCode = "200", description = "成功",
                     content = @Content(schema = @Schema(implementation = User.class))),
@@ -43,19 +43,40 @@ public class UserController {
         return userService.getUser();
     }
 
+
+    @GetMapping("/one")
+    @Operation(summary = "查询用户信息", description = "这里固定获取第一个用户，无需参数", responses = {
+            @ApiResponse(responseCode = "200", description = "成功",
+                    content = @Content(schema = @Schema(implementation = User.class))),
+            @ApiResponse(responseCode = "404", description = "用户不存在")
+    })
+    public User getOne() {
+        return userService.getUser();
+    }
+
+
     @GetMapping("/list")
     @Operation(summary = "查询用户列表", description = "返回所有用户信息，无需参数")
-    public List<User> getUsetList() {
-        return userService.getUsetList();
+    public List<User> getUserList() {
+        return userService.getUserList();
     }
 
     @GetMapping("/user/{index}")
     @Operation(summary = "查询用户信息", description = "需提供用户列表的INDEX")
-    public User getUsetList(
+    public User getUserByIndex(
             @Parameter(name = "index", description = "列表下标", example = "1", required = true)
             @PathVariable int index
     ) {
-        return userService.getUsetList().get(index);
+        return userService.getUserList().get(index);
+    }
+
+    @GetMapping("/user/info")
+    @Operation(summary = "查询用户信息", description = "需提供用户列表的INDEX")
+    public User getUserInfo(
+            @Parameter(name = "index", description = "列表下标", example = "1", required = true)
+            int index
+    ) {
+        return userService.getUserByIndex(index);
     }
 
 }

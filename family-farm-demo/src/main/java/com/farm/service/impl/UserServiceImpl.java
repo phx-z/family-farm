@@ -20,14 +20,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUser() {
-        return new User(1,"用户名");
+        return new User(1, "用户名");
+    }
+
+
+    @Override
+    public User getUserByIndex(int index) {
+        return this.getUserList().get(index);
     }
 
     @Override
-    public List<User> getUsetList() {
+    public List<User> getUserList() {
         List<User> userList = new ArrayList<>();
-        userList.add(new User(1,"用户名1"));
-        userList.add(new User(2,"用户名2"));
+        userList.add(new User(1, "用户名1"));
+        userList.add(new User(2, "用户名2"));
         return userList;
     }
 }
