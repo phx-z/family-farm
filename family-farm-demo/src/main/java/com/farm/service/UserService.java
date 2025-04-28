@@ -17,6 +17,8 @@ public interface UserService {
 
     User getUser();
 
-    List<User> getUsetList();
+    User getUserByIndex(int index);
+
+    List<User> getUserList();
 
 }

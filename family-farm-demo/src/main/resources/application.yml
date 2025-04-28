@@ -1,2 +1,6 @@
 server:
   port: 8080
+# 设置日志打印级别
+logging:
+  level:
+    org.springframework: debug
